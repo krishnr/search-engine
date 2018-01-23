@@ -17,11 +17,15 @@ metadata_folder = sys.argv[2]
 # "./latimes.gz"
 if not os.path.exists(gz_file):
     print "Path to dataset is invalid!"
+    exit()
 
 # "./metadata.txt"
 if not os.path.exists(metadata_folder):
     print "Making directory: " + metadata_folder
     os.makedirs(metadata_folder)
+else:
+    print "Directory already exists!"
+    exit()
 
 metadata_dict = {}
 id_to_docno = {}
