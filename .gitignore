@@ -1,3 +1,6 @@
 *latimes.gz
 *metadata-index*
 *.docx
+*.pdf
+*.zip
+index/
