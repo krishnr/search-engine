@@ -63,20 +63,29 @@ for query_tuple in queries:
     tokens = tokenize(query)
     
     docs = []
-    
+
+    # collects all the docs which contain each token in the query    
     for token in tokens:
+        if token not in term_to_termid:
+            docs = []
+            continue
         termid = term_to_termid[token]
         postings_list = postings[termid]
-        # get every even index => doc_id
+        # get every even index
         docs_list = postings_list[0::2]
         docs.append(docs_list)
 
+    if len(docs) == 0:
+        continue
+
+    # intersects all the docs which contain ALL the tokens
     doc_ids = list(set.intersection(*map(set,docs)))
     doc_nos = [id_to_docno[x] for x in doc_ids]
     ranks = [i+1 for i,_ in enumerate(doc_ids)]
     scores = [len(doc_ids)-ranks[i] for i,_ in enumerate(doc_ids)]
 
+    # print output to file
     for i in range(0,len(doc_ids)):
-        result_line = str(topicID) + " Q0 " + str(doc_nos[i]) + " " + str(ranks[i]) + " " + str(scores[i]) + " krameshAND\n"
+        result_line = str(topicID) + " q0 " + str(doc_nos[i]) + " " + str(ranks[i]) + " " + str(scores[i]) + " krameshAND\n"
         with open(output_file, 'a') as f:
             f.write(result_line)
