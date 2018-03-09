@@ -5,3 +5,9 @@
 *.zip
 index/
 sample-index/
+*.vscode
+A3-files/
+*/__pycache__
+*.pyc
+*.csv
+*.p
