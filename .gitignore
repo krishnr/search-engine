@@ -6,8 +6,9 @@
 index/
 sample-index/
 *.vscode
-A3-files/
+A*-files/
 */__pycache__
 *.pyc
 *.csv
 *.p
+stem-index/

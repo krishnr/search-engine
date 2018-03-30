@@ -1,16 +1,9 @@
 import pickle
+import re
 
-# code to extract queries
-queries = [('1', 'Mars, NASA'),
-('2', 'AI, robot, Olympics'),
-('3', 'Toronto'),
-('4', 'Toronto, Amazon'),
-('5', 'fashion'),
-('6', 'Mars, Olympics')]
+queries = []
 
-pickle.dump(queries, open('sample-queries.txt', 'wb'))
-
-with open(queries_file, 'rb') as f:
+with open('A4-files/topics/topics.401-450.txt', 'r') as f:
     doc_content = ""
     in_doc = False
     doc_id = 0
@@ -45,4 +38,10 @@ with open(queries_file, 'rb') as f:
 
             doc_content = ""
 
-pickle.dump(queries, open('queries.txt', 'wb'))
+pickle.dump(queries, open('queries.p', 'wb'))
+
+open('queries.txt', 'w').close()
+for query in queries:
+    with open('queries.txt', 'a') as f:
+        f.write('\t'.join(query))
+        f.write('\n')
