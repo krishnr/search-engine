@@ -10,4 +10,5 @@ A*-files/
 *.csv
 *.p
 stem-index/
+*.mov
 !index.zip
