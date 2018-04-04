@@ -45,26 +45,21 @@ def bm25(freq, doc_length, query_freq, n, avdl, N):
 
     return ((k1 + 1)*freq) / (K+freq) * (k2+1)*query_freq/(k2+query_freq) * log((N - n + 0.5)/(n + 0.5))
 
-def tokenize(text, headline='', graphic=''):
+def tokenize(text):
     tokens = []
 
     # removing tags
     TAG_RE = re.compile(r'<[^>]+>')
     text = TAG_RE.sub('', text)
-    headline = TAG_RE.sub('', headline)
-    graphic = TAG_RE.sub('', graphic)
 
     # downcasing
     text = text.lower()
-    headline = headline.lower()
-    graphic = graphic.lower()
 
     # extracting tokens
     text_tokens = re.split(r"[^a-zA-Z0-9]", text)
-    headline_tokens = re.split(r"[^a-zA-Z0-9]", headline)
-    graphic_tokens = re.split(r"[^a-zA-Z0-9]", graphic)
+    text_tokens = list(filter(None, text_tokens))
 
-    tokens = text_tokens # + headline_tokens + graphic_tokens
+    tokens = text_tokens
 
     return tokens
 
@@ -83,37 +78,45 @@ def get_snippet(query_tokens, text):
     for i, s in enumerate(sent_scores):
         sentence, score = s
         if i == 0 or i == 1:
-            score += 2 - i
+            I = 2 - i
+        else:
+            I = 0
         
-        c = 0
-        matches = []
+        query_matches = []
         k = 0
-        query_terms = 0
-        for s in tokenize(sentence):
-            if s in query_tokens:
-                c +=1
-                query_terms += 1
-                if s not in matches:
-                    matches.append(s)
-            if query_terms > k:
-                k = query_terms
-            query_terms = 0
-        d = len(matches)
-        score += c + d + k
+        contig_terms = 0
+        for token in tokenize(sentence):
+            if contig_terms > k:
+                k = contig_terms
+                
+            if token in query_tokens:
+                contig_terms += 1
+                query_matches.append(token)
+            else:
+                contig_terms = 0
+        c = len(query_matches)
+        d = len(set(query_matches))
+        score = 2*I + 3*c + 5*d + 4*k
         sent_scores[i] = (score, sentence)
 
     ranked_sentences = sorted(sent_scores, reverse=True)
     snippet = ""
-    for s in ranked_sentences:
-        if len(snippet) > 250:
+    for i, s in enumerate(ranked_sentences):
+        if len(snippet) > 250 or i > 2:
             break
-        _, sentence = s
-        snippet += sentence
+        score, sentence = s
+        if score > 0:
+            snippet += sentence
 
     return snippet
 
-def strip_tags(text):
-    return bs(text, "html5lib").get_text().replace('\\n', '\n').replace("\\'", "\'").strip()
+def strip_tags(text, isFullDoc=False):
+    if isFullDoc:
+        text = bs(text, "html5lib").get_text().strip()
+        return text
+        
+    text = bs(text, "html5lib").get_text().replace('\n', ' ').strip()
+    return ' '.join(text.split())
     
 def main():
     query = input("Enter a query: ")
@@ -168,7 +171,7 @@ def main():
         if not headline:
             headline = snippet[:50] + "..."
 
-        print(rank, headline, "(" + date + ")")
+        print(str(rank) + ".", headline, "(" + date + ")")
         print(snippet, "(" + docno + ")", end='\n\n\n')
     
     time_taken = datetime.now().timestamp() - start_time.timestamp()
@@ -184,7 +187,7 @@ def main():
         if user_input.isdigit() and int(user_input) < 11:
             idx = int(user_input) - 1
             text, full_doc = ranked_doc_text[idx]
-            full_doc = strip_tags(full_doc)
+            full_doc = strip_tags(full_doc, isFullDoc=True)
             print(full_doc)
     
     main()

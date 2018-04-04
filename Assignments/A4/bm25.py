@@ -68,6 +68,7 @@ def main():
     for i,query_tuple in enumerate(queries):
         topicID = query_tuple[0]
         query = query_tuple[1]
+        print(topicID)
 
         query_tokens = tokenize(query)
         query_tokens = stem(query_tokens)

@@ -15,10 +15,10 @@ def get_doc_text(metadata_folder, docno, docno_to_id):
     doc_id = docno_to_id[docno]
 
     # finding the raw document using date and doc_id
-    doc_file = metadata_folder+ "/docs/" + date + "/" + str(doc_id) + ".txt.gz"
-    with gzip.open(doc_file, 'r') as doc:
-        doc_content = str(doc.read())
-
+    doc_file = "index/docs/" + date + "/" + str(doc_id) + ".txt.gz"
+    with gzip.open(metadata_folder.open(doc_file,'r'), 'r') as doc:
+        doc_content = str(doc.read().decode())
+    
     # extracting headline
     headline_regex = re.compile(r"<HEADLINE>(.+)</HEADLINE>", re.DOTALL)
     match = re.search(headline_regex, doc_content)
@@ -43,4 +43,4 @@ def get_doc_text(metadata_folder, docno, docno_to_id):
     else:
         text = ""
 
-    return (text, doc_content)
+    return (text + graphic, doc_content)

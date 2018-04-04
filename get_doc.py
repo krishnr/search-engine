@@ -43,4 +43,4 @@ def get_doc_text(metadata_folder, docno, docno_to_id):
     else:
         text = ""
 
-    return (text, doc_content)
+    return (text + graphic, doc_content)
