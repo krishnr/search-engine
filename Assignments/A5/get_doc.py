@@ -1,6 +1,3 @@
-# MSCI 541 Assignment 3
-# Krishn Ramesh - 20521942
-
 import sys
 import os
 import gzip

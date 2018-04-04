@@ -11,7 +11,7 @@ k1 = 1.2
 b = 0.75
 k2 = 7
 
-INDEX_FOLDER = "../A2/index"
+INDEX_FOLDER = "../index"
 
 # loading the metadata dictionary pickle
 with open(INDEX_FOLDER + '/pickles/metadata_dict.p', 'rb') as handle:

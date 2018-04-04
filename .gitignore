@@ -3,8 +3,6 @@
 *.docx
 *.pdf
 *.zip
-index/
-sample-index/
 *.vscode
 A*-files/
 */__pycache__
@@ -12,3 +10,4 @@ A*-files/
 *.csv
 *.p
 stem-index/
+!index.zip
